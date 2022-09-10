@@ -1,5 +1,5 @@
 .gitpod.yml
 package-lock.json
 node_modules/
-etc/groups.json
-etc/users.json
+rootfs/etc/groups.json
+rootfs/etc/users.json
