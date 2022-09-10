@@ -1,0 +1,12 @@
+{
+  "root": {
+    "name": "root",
+    "permissions": [],
+    "pwhashed": "",
+    "uid": 0,
+    "groups": [
+      "0"
+    ],
+    "shell": "djsh"
+  }
+}
