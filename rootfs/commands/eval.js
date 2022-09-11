@@ -1,3 +1,5 @@
+const { returncode } = require("../libraries/rcodeapi")
+
 module.exports = {
     name: "eval",
     desc: "Evaluate some javascript code",
@@ -5,10 +7,10 @@ module.exports = {
       let rtobj = {}
       try {
         rtobj.stdout = eval(args.join(' '))
-        rtobj.code = 0
+        rtobj.code = returncode.OK
       } catch (err) {
-        rtobj.stdout = ctx.color.red.bold(err.toString() + "\n\n" + err.stack);
-        rtobj.code = 1
+        rtobj.stdout = ctx.color.red(err.stack);
+        rtobj.code = returncode.ERROR
       }
 
       return rtobj

@@ -1,4 +1,5 @@
 const { getPermissions } = require("../libraries/permapi")
+const { returncode } = require("../libraries/rcodeapi")
 
 module.exports = {
     name: "djsh",
@@ -7,7 +8,7 @@ module.exports = {
         if (ctx.env["shell"] == "djsh") {
             return {
                 stdout: "djsh cannot be invoked within djsh.",
-                code: 1
+                code: returncode.ERROR_INVOCATION
             }
         }
 
@@ -30,12 +31,16 @@ module.exports = {
             let args = line;
         
             if (ctx.commands[command]) {
-              let result = ctx.commands[command].execute(ctx, args)?.stdout || ""
+              let result = ""
+              try {
+                result = ctx.commands[command].execute(ctx, args)?.stdout || ""
+              } catch (err) {
+                console.log(ctx.color.red(err.stack))
+              }
               let newline = result ? "\n" : ""
               process.stdout.write(result + newline)
             } else {
               console.log('command not found: ' + ctx.color.red(command))
-              
             }
 
             fuser = usernameColor.bold(ctx.user.trim());

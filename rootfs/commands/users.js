@@ -1,3 +1,5 @@
+const { returncode } = require("../libraries/rcodeapi")
+
 module.exports = {
     name: "users",
     desc: "List users from users.json.",
@@ -10,7 +12,7 @@ module.exports = {
 
       return {
         stdout: stdout,
-        code: 0
+        code: returncode.OK
       }
     }
 }

@@ -1,3 +1,5 @@
+const { returncode } = require("../libraries/rcodeapi")
+
 module.exports = {
     name: "help",
     desc: "Show available commands, or get extended help on a specific command.",
@@ -5,8 +7,7 @@ module.exports = {
       let stdout = "";
       if (args.length != 0) {
         return {
-            stdout: "Not implemented",
-            code: 1
+            code: returncode.ERROR_NOT_IMPLEMENTED
         }
       }
       Object.keys(ctx.commands).forEach(cmdname => {
@@ -16,7 +17,7 @@ module.exports = {
       });
       return {
         stdout: stdout,
-        code: 0
+        code: returncode.OK
       }
     }
 }

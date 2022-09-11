@@ -1,6 +1,6 @@
 let fs = require("fs")
 
-exports.version = "0.1.0"
+exports.version = "0.7.0"
 exports.description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + exports.version
 
 const rootpath = process.cwd() + "/rootfs/" // This assumes that cwd contains the rootfs folder.
@@ -15,25 +15,66 @@ function _absolutePath(path) {
     return rootpath + path
 }
 
+exports.ePath = (path) => {
+    return path.replace(rootpath, "")
+}
+
+exports.expandPath = (ctx, path, ts = true) => {
+    let newpath = ""
+    if (path.startsWith("/")) {
+        newpath = path
+    } else {
+        newpath = ctx.path + path
+    }
+    if (ts) {
+        if (!newpath.endsWith("/")) {
+            newpath += "/"
+        }
+    } else {
+        if (newpath.endsWith("/")) {
+            newpath = newpath.slice(0, -1)
+        }
+    }
+    return newpath
+}
+
 exports.exists = (path) => {
     return fs.existsSync(_absolutePath(path))
 }
 
-exports.open = (path) => {
-    fs.open(_absolutePath(path), (err, fd) => {
-        if (err) {
-            throw err;
-        }
-        return fd
+exports.write = (path, data, encoding = "utf8") => {
+    return fs.writeFileSync(_absolutePath(path), data, {
+        encoding: encoding
     })
 }
 
-exports.write = (fd, data, position = 0, encoding = "utf8") => {
-    return fs.writeSync(fd, String(data), position, encoding)
+exports.read = (path, encoding = "utf8") => {
+    return fs.readFileSync(_absolutePath(path), {
+        encoding: encoding
+    })
 }
 
-exports.read = (pathOrFd, encoding = "utf8") => {
-    return fs.readFileSync()
+// Shorthand for listing directory contents
+exports.readdir = (path) => {
+    return fs.readdirSync(_absolutePath(path))
 }
+
+exports.getstat = (path) => {
+    return fs.statSync(_absolutePath(path))
+}
+
+exports.isDir = (path) => {
+    return fs.statSync(_absolutePath(path)).isDirectory()
+}
+
+exports.isBlock = (path) => {
+    return fs.statSync(_absolutePath(path)).isBlockDevice()
+}
+
+exports.isFile = (path) => {
+    return fs.statSync(_absolutePath(path)).isFile()
+}
+
+
 
 
