@@ -9,7 +9,6 @@ module.exports = {
         directory = expandPath(ctx, directory, true)
         if (isDir(directory)) {
             ctx.path = ePath(directory)
-            
             return {
                 code: 0
             }
