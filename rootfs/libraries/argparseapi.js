@@ -1,4 +1,4 @@
-exports.version = "0.2.0"
+exports.version = "0.3.0"
 exports.description = "argparseapi, written by keli5 for JSys to parse command line arguments. version " + exports.version
 const shortSwitchRegex = /^-.$/gm
 
