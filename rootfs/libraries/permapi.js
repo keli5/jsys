@@ -14,7 +14,7 @@ exports.getPermissions = function (ctx, user) {
     perms.push(...user.permissions) // add user permissions
     groups.forEach(group => { // for each group,
         group = ctx.groups[group] 
-        perms.push(...group.permissions) // add group permissions
+        perms.push(...group?.permissions || "") // add group permissions ( or none if user has a bad group )
     });
     perms = [...new Set(perms)] // deduplicate
     return perms
