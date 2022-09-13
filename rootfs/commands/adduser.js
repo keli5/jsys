@@ -1,15 +1,35 @@
 const { returncode } = require("../libraries/rcodeapi")
 const { read, write } = require("../libraries/fsapi")
 const { getPermissions } = require("../libraries/permapi")
+const { parseArgs } = require("util")
 const sha256 = require("js-sha256").sha256
 
 module.exports = {
     name: "adduser",
-    desc: "Add a user to the system. adduser <username> <password>",
+    desc: "Add a user to the system",
+    usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>]",
     execute: (ctx, args) => {
-        if (!args[0] || !args[1]) {
+        let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
+            args: args,
+            allowPositionals: false,
+            strict: false,
+            tokens: true,
+            options: {
+                "username": {
+                    type: "string",
+                },
+                "password": {
+                    type: "string"
+                },
+                "shell": {
+                    type: "string",
+                }
+            }
+        })
+
+        if (!values.username) {
+            module.exports.help()
             return {
-                stdout: "adduser takes 2 arguments: username, password",
                 code: returncode.ERROR_MISSING_ARGUMENT
             }
         }
@@ -19,6 +39,7 @@ module.exports = {
                 code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
             }
         }
+        let shells = read("/etc/shells.txt").split("\n")
         let users  = JSON.parse(read("/etc/users.json"))
         let latestuid = 0
         let groups = JSON.parse(read("/etc/groups.json"))
@@ -28,20 +49,26 @@ module.exports = {
                 latestuid = value.uid
             }
         }
-        let uname = args[0].toLowerCase()
+        let uname = values.username.toLowerCase()
         if (users[uname]) {
             return {
                 stdout: uname + " already exists",
                 code: returncode.ERROR_ALREADY_EXISTS
             }
         }
+        if (!shells.includes(values.shell)) {
+            return {
+                stdout: values.shell + " is not a valid shell",
+                code: returncode.ERROR_INVALID_ARGUMENT
+            }
+        }
         users[uname] = {};
         users[uname]["name"] = uname
-        users[uname]["pwhashed"] = sha256(args[1])
+        users[uname]["pwhashed"] = sha256(values.password || "") 
         users[uname]["permissions"] = []
         users[uname]["uid"] = latestuid + 1
         users[uname]["groups"] = [String(latestuid + 1)]
-        users[uname]["shell"] = "djsh"
+        users[uname]["shell"] = values.shell || "djsh"
 
         groups[String(latestuid + 1)] = {}
         groups[String(latestuid + 1)]["name"] = uname
@@ -49,5 +76,16 @@ module.exports = {
 
         write("/etc/users.json", JSON.stringify(users, null, 2))
         write("/etc/groups.json", JSON.stringify(groups, null, 2))
+    },
+    help: () => {
+        console.log(module.exports.name + ":", module.exports.desc)
+        console.log("usage:", module.exports.name, module.exports.usage)
+        console.log("---")
+        console.log("arguments:")
+        console.log("!   --username <username>")
+        console.log("?   --password [password]")
+        console.log("?   --shell [shell]")
+        console.log("---")
+        console.log("! is a required argument, ? is optional")
     }
 }

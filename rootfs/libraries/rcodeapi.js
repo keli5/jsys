@@ -10,5 +10,6 @@ exports.returncode = Object.freeze({
     ERROR_NOT_IMPLEMENTED: Symbol(5),
     ERROR_MISSING_ARGUMENT: Symbol(6),
     ERROR_ALREADY_EXISTS: Symbol(7),
-    ERROR_INSUFFICIENT_PERMISSIONS: Symbol(8)
+    ERROR_INSUFFICIENT_PERMISSIONS: Symbol(8),
+    ERROR_INVALID_ARGUMENT: Symbol(9)
 })
