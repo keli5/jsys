@@ -9,6 +9,7 @@ Array.prototype.remove = function() {
   return this;
 };
 
+const EventEmitter = require("events")
 const readline = require('readline');
 const c = require('colors/safe');
 const fs = require('fs');
@@ -45,7 +46,8 @@ let context = { // Pass an object with essential information
   "rl": rl,
   "color": c,
   "commands": {},
-  "env": {}
+  "env": {},
+  "events": new EventEmitter()
 }
 
 let commands = context.commands;

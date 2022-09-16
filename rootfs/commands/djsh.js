@@ -1,22 +1,22 @@
 const { getPermissions } = require("../libraries/permapi")
 const { returncode } = require("../libraries/rcodeapi")
-const paths = require("path")
+const paths = require("path");
 
 module.exports = {
     name: "djsh",
     desc: "djsh is the Default Javascript SHell for JSys.",
     execute: (ctx) => {
+        let exitFlag = false;
         if (ctx.env["SHELL"] == "djsh") {
             return {
                 stdout: "djsh cannot be invoked within djsh.",
                 code: returncode.ERROR_INVOCATION
             }
         }
-
         let admin = getPermissions(ctx, ctx.user).includes("admin")
         ctx.env["SHELL"] = "djsh"
-        updatePrompt(admin, ctx, returncode.OK)
 
+        updatePrompt(admin, ctx, returncode.OK)
         ctx.rl.prompt()
         ctx.rl.on('line', (line) => {
             line = line.trim()
@@ -40,17 +40,21 @@ module.exports = {
               console.log('command not found: ' + ctx.color.red(command))
               lastReturnCode = returncode.ERROR
             }
-            
-            updatePrompt(admin, ctx, lastReturnCode)
+            if (exitFlag) {
+              ctx.rl.setPrompt("Login: ")
+              exitFlag = false;
+            } else {
+              updatePrompt(admin, ctx, lastReturnCode)
+            }
             ctx.rl.prompt();
         }); 
+
+        ctx.events.on("exitShell", (ctx) => {
+          ctx.env["SHELL"] = undefined;
+          exitFlag = true;
+          ctx.commands["login"].execute(ctx) // please for the love of all that is fucking holy
+        })                                   // there has to be a better way to do this
     },
-    exit: (ctx) => { // shells should provide an exit() to gracefully exit
-      ctx.env["SHELL"] = undefined;
-      return {
-        code: returncode.OK
-      }
-    }
 }
 
 function updatePrompt(admin, ctx, lrc) {
