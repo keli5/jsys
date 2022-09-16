@@ -1,6 +1,6 @@
 const fs = require("fs")
 
-exports.version = "0.11.0"
+exports.version = "0.19.0"
 exports.description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + exports.version
 
 const rootpath = process.cwd() + "/rootfs/" // This assumes that cwd contains the rootfs folder.
@@ -75,6 +75,25 @@ exports.isFile = (path) => {
     return fs.statSync(_absolutePath(path)).isFile()
 }
 
+exports.copy = (src, dest) => {
+    return fs.cpSync(_absolutePath(src), _absolutePath(dest), {
+        recursive: true
+    })
+}
 
+exports.remove = (path) => {
+    return fs.rmSync(path, {
+        recursive: true,
+        force: true
+    })
+}
 
+exports.move = (src, dest) => {
+    return fs.renameSync(_absolutePath(src), _absolutePath(dest))
+}
+
+exports.mkdir = (path) => {
+    return fs.mkdirSync(_absolutePath(path))
+    
+}
 

@@ -1,4 +1,5 @@
-exports.version = "0.1.0"
+// OK will always be 0, ERROR will always be 1. For consistency
+exports.version = "0.10.0"
 exports.description = "rcodeapi.js, written by keli5 for JSys to work with program return codes. version " + exports.version
 
 exports.returncode = Object.freeze({

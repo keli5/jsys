@@ -4,3 +4,5 @@ node_modules/
 rootfs/etc/groups.json
 rootfs/etc/users.json
 todo.txt
+rootfs/home/*
+!rootfs/home/root

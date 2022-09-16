@@ -1,5 +1,5 @@
 const { returncode } = require("../libraries/rcodeapi")
-const { read, write } = require("../libraries/fsapi")
+const { read, write, copy, mkdir } = require("../libraries/fsapi")
 const { getPermissions } = require("../libraries/permapi")
 const { parseArgs } = require("util")
 const sha256 = require("js-sha256").sha256
@@ -56,9 +56,10 @@ module.exports = {
                 code: returncode.ERROR_ALREADY_EXISTS
             }
         }
-        if (!shells.includes(values.shell)) {
+        let shell = values.shell || "djsh"
+        if (!shells.includes(shell)) {
             return {
-                stdout: values.shell + " is not a valid shell",
+                stdout: shell + " is not a valid shell",
                 code: returncode.ERROR_INVALID_ARGUMENT
             }
         }
@@ -68,7 +69,9 @@ module.exports = {
         users[uname]["permissions"] = []
         users[uname]["uid"] = latestuid + 1
         users[uname]["groups"] = [String(latestuid + 1)]
-        users[uname]["shell"] = values.shell || "djsh"
+        users[uname]["shell"] = shell
+        mkdir("/home/")
+        copy("/etc/skel", "/home/" + uname)
 
         groups[String(latestuid + 1)] = {}
         groups[String(latestuid + 1)]["name"] = uname
