@@ -6,7 +6,6 @@ module.exports = {
     desc: "",
     hidden: true,
     execute: (ctx) => {
-        let homepath = ""
         ctx.rl.question('Login: ', (username) => {
             if (!ctx.users[username]) {
                 console.log(ctx.color.red('Invalid username'));
@@ -19,11 +18,7 @@ module.exports = {
             if (ctx.users[username].pwhashed != "") {
                 ctx.rl.question('Password: ', (password) => {
                     if (sha256(password) == ctx.users[username].pwhashed) {
-                        ctx.rl.stdoutMuted = false;
-                        ctx.user = username;
-                        homepath = "/home/" + username.toLowerCase()
-                        ctx.path = exists(homepath) ? homepath : "/"
-                        ctx.commands[shell].execute(ctx)
+                        doLogin(ctx, username, shell)
                     } else {
                         ctx.rl.stdoutMuted = false;
                         console.log(ctx.color.red('\nIncorrect password'));
@@ -32,12 +27,16 @@ module.exports = {
                 })
                 ctx.rl.stdoutMuted = true;
             } else if (ctx.users[username].pwhashed == "") {
-                ctx.rl.stdoutMuted = false;
-                ctx.user = username;
-                homepath = "/home/" + username.toLowerCase()
-                ctx.path = exists(homepath) ? homepath : "/" 
-                ctx.commands[shell].execute(ctx)
+                doLogin(ctx, username, shell)
             }
         })
     }
+}
+
+function doLogin(ctx, username, shell) {
+    ctx.rl.stdoutMuted = false;
+    ctx.user = username;
+    let homepath = "/home/" + username.toLowerCase() + "/"
+    ctx.path = exists(homepath) ? homepath : "/"
+    ctx.commands[shell].execute(ctx)
 }
