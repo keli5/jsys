@@ -21,7 +21,9 @@ module.exports = {
 
         ctx.env["shell"] = "djsh"
         let fuser = usernameColor.bold(ctx.user.trim());
-        let fpath = ctx.color.magenta.bold(`[${ctx.path.trim()}]`);
+        let fpath = paths.resolve(ctx.path) // FORMATTED PATH only!
+        fpath = fpath.replace("/home/" + ctx.user, "~")
+        fpath = ctx.color.magenta.bold(`[${fpath.trim()}]`);
 
         let shprompt = `${fuser} : ${fpath} ${parsedPromptChar} `
 
@@ -52,6 +54,7 @@ module.exports = {
 
             fuser = usernameColor.bold(ctx.user.trim());
             fpath = paths.resolve(ctx.path) // FORMATTED PATH only!
+            fpath = fpath.replace("/home/" + ctx.user, "~")
             fpath = ctx.color.magenta.bold(`[${fpath.trim()}]`);
 
             if (lastReturnCode == returncode.OK) {

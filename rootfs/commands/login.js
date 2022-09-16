@@ -1,10 +1,12 @@
 const sha256 = require("js-sha256").sha256
+const { exists } = require("../libraries/fsapi")
 
 module.exports = {
     name: "login",
     desc: "",
     hidden: true,
     execute: (ctx) => {
+        let homepath = ""
         ctx.rl.question('Login: ', (username) => {
             if (!ctx.users[username]) {
                 console.log(ctx.color.red('Invalid username'));
@@ -19,7 +21,8 @@ module.exports = {
                     if (sha256(password) == ctx.users[username].pwhashed) {
                         ctx.rl.stdoutMuted = false;
                         ctx.user = username;
-                        ctx.path = '/'
+                        homepath = "/home/" + username.toLowerCase()
+                        ctx.path = exists(homepath) ? homepath : "/"
                         ctx.commands[shell].execute(ctx)
                     } else {
                         ctx.rl.stdoutMuted = false;
@@ -31,7 +34,8 @@ module.exports = {
             } else if (ctx.users[username].pwhashed == "") {
                 ctx.rl.stdoutMuted = false;
                 ctx.user = username;
-                ctx.path = '/'
+                homepath = "/home/" + username.toLowerCase()
+                ctx.path = exists(homepath) ? homepath : "/" 
                 ctx.commands[shell].execute(ctx)
             }
         })

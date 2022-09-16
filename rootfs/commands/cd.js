@@ -7,6 +7,7 @@ module.exports = {
     execute: (ctx, args) => {
         let directory = args[0] || ctx.path
         directory = expandPath(ctx, directory, true)
+        directory = "/" + directory
         if (isDir(directory)) {
             ctx.path = ePath(directory)
             return {
