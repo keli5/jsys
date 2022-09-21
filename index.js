@@ -48,6 +48,10 @@ let context = { // Pass an object with essential information
   "commands": {},
   "env": {},
   "events": new EventEmitter()
+  "os": {
+    "distribution": "jsys_base",
+    "version": "0.15.0"
+  }
 }
 
 let commands = context.commands;
