@@ -5,7 +5,7 @@ module.exports = {
     name: "jsyde",
     desc: "JSys Desktop Environment",
     execute: (ctx, args) => {
-        const appdata = "../etc/jsyde"
+        const appdata = "../etc/jsyde/"
         const pagedir = "../rootfs/etc/jsyde/page" // son of a bitch
         let cleanedArgs = args
         let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
@@ -30,10 +30,13 @@ module.exports = {
 
         app.get("/", (req, res) => {
             res.render(pagedir + "/root.ejs", {
-                "context": ctx
+                "context": ctx,
+                "theme": {
+                    "wallpaper": "asset/wallpaper/default.jpg"
+                },
             })
         })
-
+        app.use(express.static("./rootfs/etc/jsyde/"))
         app.listen(port)
         console.log("jsyde listening on " + port)
     }

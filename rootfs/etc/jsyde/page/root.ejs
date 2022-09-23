@@ -4,6 +4,9 @@
         <title><%= context.os.distribution || "jsys" %></title>
     </head>
     <body>
-        
+        <script> // this is gross.
+            let theme = '<%- theme %>'  // 
+        </script>
+        <script src="/page/js/root.js"></script>
     </body>
 </html>
