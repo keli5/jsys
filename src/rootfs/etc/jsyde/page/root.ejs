@@ -4,8 +4,9 @@
         <title><%= context.os.distribution || "jsys" %></title>
     </head>
     <body>
+        <div id="panel"></div>
         <script> // this is gross.
-            let theme = '<%- theme %>'  // 
+            var theme = JSON.parse('<%- theme %>') // 
         </script>
         <script src="/page/js/root.js"></script>
     </body>

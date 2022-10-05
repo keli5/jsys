@@ -1,0 +1,12 @@
+{
+  "0": {
+    "name": "root",
+    "permissions": [
+      "admin"
+    ]
+  },
+  "1000": {
+    "name": "letters",
+    "permissions": []
+  }
+}
