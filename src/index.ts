@@ -1,4 +1,4 @@
-Array.prototype.remove = function() {
+global.arrayRemove = function(what: any) {
   var what, a = arguments, L = a.length, ax;
   while (L && this.length) {
       what = a[--L];

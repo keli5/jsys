@@ -1,4 +1,4 @@
-const fs = require("fs")
+import * as fs from "fs"
 
 exports.version = "0.19.0"
 exports.description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + exports.version
@@ -15,11 +15,11 @@ function _absolutePath(path) {
     return rootpath + path
 }
 
-exports.ePath = (path) => {
+exports.ePath = (path: string) => {
     return path.replace(rootpath, "")
 }
 
-exports.expandPath = (ctx, path, ts = true) => {
+exports.expandPath = (ctx, path: string, ts = true) => {
     let newpath = ""
     path = path.replace("~", "/home/" + ctx.user)
     if (path.startsWith("/")) {
@@ -39,61 +39,61 @@ exports.expandPath = (ctx, path, ts = true) => {
     return newpath
 }
 
-exports.exists = (path) => {
+exports.exists = (path: string) => {
     return fs.existsSync(_absolutePath(path))
 }
 
-exports.write = (path, data, encoding = "utf8") => {
+exports.write = (path: string, data, encoding: BufferEncoding = "utf8") => {
     return fs.writeFileSync(_absolutePath(path), data, {
         encoding: encoding
     })
 }
 
-exports.read = (path, encoding = "utf8") => {
+exports.read = (path: string, encoding: BufferEncoding = "utf8") => {
     return fs.readFileSync(_absolutePath(path), {
         encoding: encoding
     })
 }
 
 // Shorthand for listing directory contents
-exports.readdir = (path) => {
+exports.readdir = (path: string) => {
     return fs.readdirSync(_absolutePath(path))
 }
 
-exports.getstat = (path) => {
+exports.getstat = (path: string) => {
     return fs.statSync(_absolutePath(path))
 }
 
-exports.isDir = (path) => {
+exports.isDir = (path: string) => {
     return fs.statSync(_absolutePath(path)).isDirectory()
 }
 
-exports.isBlock = (path) => {
+exports.isBlock = (path: string) => {
     return fs.statSync(_absolutePath(path)).isBlockDevice()
 }
 
-exports.isFile = (path) => {
+exports.isFile = (path: string) => {
     return fs.statSync(_absolutePath(path)).isFile()
 }
 
-exports.copy = (src, dest) => {
+exports.copy = (src: string, dest: string) => {
     return fs.cpSync(_absolutePath(src), _absolutePath(dest), {
         recursive: true
     })
 }
 
-exports.remove = (path) => {
+exports.remove = (path: string) => {
     return fs.rmSync(path, {
         recursive: true,
         force: true
     })
 }
 
-exports.move = (src, dest) => {
+exports.move = (src: string, dest: string) => {
     return fs.renameSync(_absolutePath(src), _absolutePath(dest))
 }
 
-exports.mkdir = (path) => {
+exports.mkdir = (path: string) => {
     return fs.mkdirSync(_absolutePath(path))
 }
 
