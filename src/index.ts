@@ -13,7 +13,8 @@ const EventEmitter = require("events")
 const readline = require('readline');
 const c = require('colors/safe');
 const fs = require('fs');
-const rootpath  = "./rootfs/"
+const rootpath  = "./src/rootfs/"
+const requirerootpath = "./rootfs/"
 
 const defaultfiles_etc = ["users.json", "groups.json"]
 defaultfiles_etc.forEach(item => {
@@ -22,8 +23,8 @@ defaultfiles_etc.forEach(item => {
   }
 })
 
-const users = require(rootpath + 'etc/users.json'); 
-const groups = require(rootpath + 'etc/groups.json')
+const users = require(requirerootpath + 'etc/users.json'); 
+const groups = require(requirerootpath + 'etc/groups.json')
 
 const rl = readline.createInterface({
   input:  process.stdin,
@@ -58,7 +59,7 @@ let commands = context.commands;
 let cmddir = fs.readdirSync(rootpath + "./commands")
 
 cmddir.forEach(element => {
-  let cmd = require(rootpath + "./commands/" + element)
+  let cmd = require(requirerootpath + "./commands/" + element)
   commands[cmd.name] = cmd
 });
 
