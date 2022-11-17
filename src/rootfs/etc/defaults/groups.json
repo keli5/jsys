@@ -2,5 +2,9 @@
     "0": {
         "name": "root",
         "permissions": ["admin"]
+    },  
+    "1": {
+        "name": "aexec",
+        "permissions": ["aexec"]
     }
 }
