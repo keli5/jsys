@@ -19,15 +19,15 @@ exports.ePath = (path: string) => {
     return path.replace(rootpath, "")
 }
 
-exports.expandPath = (ctx, path: string, ts = true) => {
-    let newpath = ""
+exports.expandPath = (ctx, path: string, trailingSlash: boolean = true) => {
+    let newpath: string = ""
     path = path.replace("~", "/home/" + ctx.user)
     if (path.startsWith("/")) {
         newpath = path
     } else {
         newpath = ctx.path + path
     }
-    if (ts) {
+    if (trailingSlash) {
         if (!newpath.endsWith("/")) {
             newpath += "/"
         }
