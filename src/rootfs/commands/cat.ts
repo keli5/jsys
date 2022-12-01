@@ -1,5 +1,5 @@
-let { expandPath, isFile, read } = require("../libraries/fsapi")
-let { returncode } = require("../libraries/rcodeapi")
+import { expandPath, isFile, read } from "../libraries/fsapi";
+import { returncode } from "../libraries/rcodeapi";
 
 module.exports = {
     name: "cat",
