@@ -1,4 +1,4 @@
-const { returncode } = require("../libraries/rcodeapi")
+import { returncode } from "../libraries/rcodeapi";
 
 module.exports = {
     name: "help",

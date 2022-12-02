@@ -1,6 +1,6 @@
-const { readdir, expandPath, isDir, ePath } = require("../libraries/fsapi")
-const { returncode } = require("../libraries/rcodeapi")
-const { parseArgs } = require("util") // stability 1 - i'm in danger lol
+import { readdir, expandPath, isDir, ePath } from "../libraries/fsapi";
+import { returncode } from "../libraries/rcodeapi";
+import { parseArgs } from "util";// stability 1 - i'm in danger lol
 
 module.exports = {
     name: "ls",
@@ -9,7 +9,7 @@ module.exports = {
     execute: (ctx, args) => {
         let colors = true;
         let cleanedArgs = []
-        let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
+        let {values, positionals, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
             args: args,
             allowPositionals: true,
             strict: false,

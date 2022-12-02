@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 
-const color = require("colors/safe")
+import color from "colors/safe";
 
 module.exports = {
     name: "setprompt",
