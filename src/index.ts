@@ -9,10 +9,11 @@ global.arrayRemove = function(what: any) {
   return this;
 };
 
-const EventEmitter = require("events")
-const readline = require('readline');
-const c = require('colors/safe');
-const fs = require('fs');
+import EventEmitter from "events";
+import * as readline from "readline" ;
+import * as c from "colors";
+import * as fs from "fs";
+
 const rootpath  = "./src/rootfs/"
 const requirerootpath = "./rootfs/"
 
@@ -23,8 +24,8 @@ defaultfiles_etc.forEach(item => {
   }
 })
 
-const users = require(requirerootpath + 'etc/users.json'); 
-const groups = require(requirerootpath + 'etc/groups.json')
+const users = import(requirerootpath + 'etc/users.json'); 
+const groups = import(requirerootpath + 'etc/groups.json')
 
 const rl = readline.createInterface({
   input:  process.stdin,
@@ -32,14 +33,14 @@ const rl = readline.createInterface({
   terminal: true
 });
 
-rl._writeToOutput = function _writeToOutput(stringToWrite) {
+/* rl._writeToOutput = function _writeToOutput(stringToWrite) {
   if (rl.stdoutMuted)
     rl.output.write("*");
   else
     rl.output.write(stringToWrite);
-};
+}; */ // TODO: Reimplement this. 
 
-let context = { // Pass an object with essential information
+let context = { // Pass an object with essential information and global functions. Some of these should be APIs instead -- colors & paths?
   "user": "",
   "users": users,
   "groups": groups,
@@ -58,9 +59,11 @@ let context = { // Pass an object with essential information
 let commands = context.commands;
 let cmddir = fs.readdirSync(rootpath + "./commands")
 
-cmddir.forEach(element => {
-  let cmd = require(requirerootpath + "./commands/" + element)
-  commands[cmd.name] = cmd
-});
+cmddir.forEach(cmd => {
+  console.log("cmd: ", cmd)
+  import(cmd).then(finished => {
+    commands[finished.name] = finished
+  })
+})
 
 commands["login"].execute(context)
