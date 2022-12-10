@@ -43,9 +43,9 @@ module.exports = {
         if (isdir) {
             readdir(directory).forEach(item => {
                 if (isDir(`${directory}/${item}`) && colors) {
-                    stdout += (`${item} `).blue
+                    stdout += ctx.color.blue(`${item} `)
                 } else {
-                    stdout += (`${item} `)
+                    stdout += ctx.color.white(`${item} `)
                 }
             })
 

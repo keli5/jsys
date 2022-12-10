@@ -9,7 +9,7 @@ module.exports = {
         while (true) {
             ctx.rl.question('Login: ', (username) => {
                 if (!ctx.users[username]) {
-                    console.log('Invalid username'.red);
+                    console.log(ctx.color.red('Invalid username'));
                     ctx.commands["login"].execute(ctx)
                 }
                 let shell = ctx.users[username]?.shell
@@ -22,11 +22,11 @@ module.exports = {
                             doLogin(ctx, username, shell)
                         } else {
                             ctx.rl.stdoutMuted = false;
-                            console.log('\nIncorrect password'.red);
+                            console.log(ctx.color.red('\nIncorrect password'));
                             ctx.commands["login"].execute(ctx)
                         }
                     })
-                    ctx.rl.stdoutMuted = true; // TODO: Reimplement muting stdout
+                    ctx.rl.stdoutMuted = true;
                 } else if (ctx.users[username].pwhashed == "") {
                     doLogin(ctx, username, shell)
                 }
