@@ -1,7 +1,7 @@
 import { sha256 as sha256 } from "js-sha256";
 import { exists } from "../libraries/fsapi";
 
-module.exports = {
+export default exports = {
     name: "login",
     desc: "",
     hidden: true,
