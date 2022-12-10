@@ -1,5 +1,5 @@
-import { isDir, ePath, expandPath } from "../libraries/fsapi"
-import { returncode } from "../libraries/rcodeapi"
+const { expandPath, isDir, ePath } = require("../libraries/fsapi")
+const { returncode } = require("../libraries/rcodeapi")
 
 module.exports = {
     name: "cd",

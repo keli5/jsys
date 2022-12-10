@@ -4,7 +4,6 @@
         "allowJs": true,
         "target": "ES2022",
         "moduleResolution": "node",
-        "module": "ESNext"
     },
     "include": [
         "./src/**/**/**/**/*"

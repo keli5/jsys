@@ -1,16 +1,16 @@
-import { returncode } from "../libraries/rcodeapi";
-import { write, copy, mkdir } from "../libraries/fsapi";
-import { read } from "../libraries/fsapi";
-import { getPermissions } from "../libraries/permapi";
-import { parseArgs } from "util";
-import { sha256 as sha256 } from "js-sha256";
+const { returncodes } = require("../libraries/rcodeapi")
+const { write, copy, mkdir } = require("../libraries/fsapi")
+const fread = require("../libraries/fsapi").read
+const { getPermissions } = require("../libraries/permapi")
+const { parseArgs } = require("util")
+const sha256 = require("js-sha256").sha256
 
 module.exports = {
     name: "adduser",
     desc: "Add a user to the system",
     usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>]",
     execute: (ctx, args) => {
-        let {values, positionals, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
+        let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
             args: args,
             allowPositionals: false,
             strict: false,
@@ -31,19 +31,19 @@ module.exports = {
         if (!values.username) {
             module.exports.help()
             return {
-                code: returncode.ERROR_MISSING_ARGUMENT
+                code: returncodes.ERROR_MISSING_ARGUMENT
             }
         }
         if (!getPermissions(ctx, ctx.user).includes("admin")) {
             return {
                 stdout: "you are not admin",
-                code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
+                code: returncodes.ERROR_INSUFFICIENT_PERMISSIONS
             }
         }
 
-        let shells:    Array<string> = read("/etc/shells.txt").split("\n")
-        let users:     object        = JSON.parse(read("/etc/users.json"))
-        let groups:    object        = JSON.parse(read("/etc/groups.json"))
+        let shells:    Array<string> = fread("/etc/shells.txt").split("\n")
+        let users:     object        = JSON.parse(fread("/etc/users.json"))
+        let groups:    object        = JSON.parse(fread("/etc/groups.json"))
         let latestuid: number        = 0
 
         for (let value of (<any>Object).values(users)) { // ew?
@@ -51,7 +51,7 @@ module.exports = {
                 latestuid = value.uid
             }
         }
-        let uname = (values.username as string).toLowerCase() // ????? brother
+        let uname = values.username.toLowerCase()
         if (users[uname]) {
             return {
                 stdout: uname + " already exists",
@@ -59,7 +59,7 @@ module.exports = {
             }
         }
         let shell = values.shell || "djsh"
-        if (!shells.includes(shell as string)) {
+        if (!shells.includes(shell)) {
             return {
                 stdout: shell + " is not a valid shell",
                 code: returncode.ERROR_INVALID_ARGUMENT
@@ -67,7 +67,7 @@ module.exports = {
         }
         users[uname] = {};
         users[uname]["name"]        = uname
-        users[uname]["pwhashed"]    = sha256(values.password as string || "") 
+        users[uname]["pwhashed"]    = sha256(values.password || "") 
         users[uname]["permissions"] = []
         users[uname]["uid"]         = latestuid + 1
         users[uname]["groups"]      = [String(latestuid + 1)]

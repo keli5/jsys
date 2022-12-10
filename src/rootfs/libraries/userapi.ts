@@ -1,7 +1,7 @@
-export const version = "0.1.0"
-export const description = "userapi.ts, written by keli5 for JSys to work with users. version " + version
+exports.version = "0.1.0"
+exports.description = "userapi.ts, written by keli5 for JSys to work with users. version " + exports.version
 
-export type User = {
+type User = {
     name: string,
     permissions?: string[] | [""],
     password_hash?: string | "",
@@ -10,7 +10,7 @@ export type User = {
     shell: string
 }
 
-export function userFromDisk(ctx, user: string): User {
+function userFromDisk(ctx, user: string): User {
     let diskUser = ctx.users[user]
 
     let returnUser: User = {

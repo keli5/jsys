@@ -1,6 +1,7 @@
 import * as fs from "fs"
-export const version = "0.19.0"
-export const description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + version
+
+exports.version = "0.19.0"
+exports.description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + exports.version
 
 const rootpath = process.cwd() + "/rootfs/" // This assumes that cwd contains the rootfs folder.
 
@@ -14,11 +15,11 @@ function _absolutePath(path) {
     return rootpath + path
 }
 
-export function ePath(path: string) {
+exports.ePath = (path: string) => {
     return path.replace(rootpath, "")
 }
 
-export function expandPath(ctx, path: string, trailingSlash: boolean = true) {
+exports.expandPath = (ctx, path: string, trailingSlash: boolean = true) => {
     let newpath: string = ""
     path = path.replace("~", "/home/" + ctx.user)
     if (path.startsWith("/")) {
@@ -38,61 +39,61 @@ export function expandPath(ctx, path: string, trailingSlash: boolean = true) {
     return newpath
 }
 
-export function exists (path: string) {
+exports.exists = (path: string) => {
     return fs.existsSync(_absolutePath(path))
 }
 
-export function write (path: string, data, encoding: BufferEncoding = "utf8") {
+exports.write = (path: string, data, encoding: BufferEncoding = "utf8") => {
     return fs.writeFileSync(_absolutePath(path), data, {
         encoding: encoding
     })
 }
 
-export function read (path: string, encoding: BufferEncoding = "utf8") {
+exports.read = (path: string, encoding: BufferEncoding = "utf8") => {
     return fs.readFileSync(_absolutePath(path), {
         encoding: encoding
     })
 }
 
 // Shorthand for listing directory contents
-export function readdir (path: string) {
+exports.readdir = (path: string) => {
     return fs.readdirSync(_absolutePath(path))
 }
 
-export function getstat (path: string) {
+exports.getstat = (path: string) => {
     return fs.statSync(_absolutePath(path))
 }
 
-export function isDir(path: string) {
+exports.isDir = (path: string) => {
     return fs.statSync(_absolutePath(path)).isDirectory()
 }
 
-export function isBlock (path: string) {
+exports.isBlock = (path: string) => {
     return fs.statSync(_absolutePath(path)).isBlockDevice()
 }
 
-export function isFile (path: string) {
+exports.isFile = (path: string) => {
     return fs.statSync(_absolutePath(path)).isFile()
 }
 
-export function copy (src: string, dest: string) {
+exports.copy = (src: string, dest: string) => {
     return fs.cpSync(_absolutePath(src), _absolutePath(dest), {
         recursive: true
     })
 }
 
-export function remove (path: string) {
+exports.remove = (path: string) => {
     return fs.rmSync(path, {
         recursive: true,
         force: true
     })
 }
 
-export function move (src: string, dest: string) {
+exports.move = (src: string, dest: string) => {
     return fs.renameSync(_absolutePath(src), _absolutePath(dest))
 }
 
-export function mkdir (path: string) {
+exports.mkdir = (path: string) => {
     return fs.mkdirSync(_absolutePath(path))
 }
 
