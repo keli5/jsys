@@ -9,10 +9,10 @@ global.arrayRemove = function(what: any) {
   return this;
 };
 
-const EventEmitter = require("events")
-const readline = require('readline');
-const c = require('colors/safe');
-const fs = require('fs');
+import EventEmitter from "events";
+import readline from "readline";
+import "colors";
+import fs from "fs";
 const rootpath  = "./src/rootfs/"
 const requirerootpath = "./rootfs/"
 
@@ -23,8 +23,8 @@ defaultfiles_etc.forEach(item => {
   }
 })
 
-const users = require(requirerootpath + 'etc/users.json'); 
-const groups = require(requirerootpath + 'etc/groups.json')
+const users = import(requirerootpath + 'etc/users.json'); 
+const groups = import(requirerootpath + 'etc/groups.json'); // ZAZA!!!!
 
 const rl = readline.createInterface({
   input:  process.stdin,
@@ -32,20 +32,12 @@ const rl = readline.createInterface({
   terminal: true
 });
 
-rl._writeToOutput = function _writeToOutput(stringToWrite) {
-  if (rl.stdoutMuted)
-    rl.output.write("*");
-  else
-    rl.output.write(stringToWrite);
-};
-
 let context = { // Pass an object with essential information
   "user": "",
   "users": users,
   "groups": groups,
   "path": "",
   "rl": rl,
-  "color": c,
   "commands": {},
   "env": {},
   "events": new EventEmitter(),
@@ -59,8 +51,9 @@ let commands = context.commands;
 let cmddir = fs.readdirSync(rootpath + "./commands")
 
 cmddir.forEach(element => {
-  let cmd = require(requirerootpath + "./commands/" + element)
-  commands[cmd.name] = cmd
-});
+  import("./commands/" + element).then(cmd => {
+    commands[cmd.name] = cmd
+  })
+})
 
 commands["login"].execute(context)
