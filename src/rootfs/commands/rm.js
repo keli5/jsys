@@ -1,6 +1,6 @@
-import { expandPath, isDir, remove } from "../libraries/fsapi";
-import { returncode } from "../libraries/rcodeapi";
-import { parseArgs } from "util";// stability 1 - i'm in danger lol
+const { expandPath, isDir, remove } = require("../libraries/fsapi")
+const { returncode } = require("../libraries/rcodeapi")
+const { parseArgs } = require("util") // stability 1 - i'm in danger lol
 
 module.exports = {
     name: "rm",
@@ -8,7 +8,7 @@ module.exports = {
     usage: "<PATH> [--recursive/-r]",
     execute: (ctx, args) => {
         let cleanedArgs = []
-        let {values, positionals, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
+        let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
             args: args,
             allowPositionals: true,
             strict: false,

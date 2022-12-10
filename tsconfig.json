@@ -4,9 +4,7 @@
         "allowJs": true,
         "target": "ES2022",
         "moduleResolution": "node",
-        "module": "ESNext",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true
+        "module": "ESNext"
     },
     "include": [
         "./src/**/**/**/**/*"

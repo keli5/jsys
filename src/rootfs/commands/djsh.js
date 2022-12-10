@@ -1,6 +1,6 @@
-import { getPermissions } from "../libraries/permapi";
-import { returncode } from "../libraries/rcodeapi";
-import paths from "path";
+const { getPermissions } = require("../libraries/permapi")
+const { returncode } = require("../libraries/rcodeapi")
+const paths = require("path");
 
 module.exports = {
     name: "djsh",
@@ -23,16 +23,16 @@ module.exports = {
             line = line.split(' ')
             let command = line.shift()
             let args = line;
-            let lastReturnCode;
+            let lastReturnCode = ""
         
             if (ctx.commands[command]) {
-              let result: Object;
+              let result = ""
               try {
-                result = ctx.commands[command].execute(ctx, args)?.code
-                lastReturnCode = result || returncode.OK
+                result = ctx.commands[command].execute(ctx, args)?.stdout || ""
+                lastReturnCode = result?.code || returncode.OK
               } catch (err) {
                 console.log(ctx.color.red(err.stack))
-                lastReturnCode = result || returncode.ERROR
+                lastReturnCode = result?.code || returncode.ERROR
               }
               let newline = result ? "\n" : ""
               process.stdout.write(result + newline)
@@ -52,7 +52,7 @@ module.exports = {
         ctx.events.on("exitShell", (ctx) => {
           ctx.env["SHELL"] = undefined;
           exitFlag = true;
-          return; // please for the love of all that is fucking holy
+          ctx.commands["login"].execute(ctx) // please for the love of all that is fucking holy
         })                                   // there has to be a better way to do this
     },
 }

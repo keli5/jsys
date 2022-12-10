@@ -1,4 +1,4 @@
-import { expandPath, move } from "../libraries/fsapi";
+const { expandPath, move } = require("../libraries/fsapi")
 
 module.exports = {
     name: "mv",
