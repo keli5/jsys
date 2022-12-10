@@ -10,10 +10,9 @@ global.arrayRemove = function(what: any) {
 };
 
 import EventEmitter from "events";
-import * as readline from "readline" ;
-import * as c from "colors";
-import * as fs from "fs";
-
+import readline from "readline";
+import "colors";
+import fs from "fs";
 const rootpath  = "./src/rootfs/"
 const requirerootpath = "./rootfs/"
 
@@ -25,7 +24,7 @@ defaultfiles_etc.forEach(item => {
 })
 
 const users = import(requirerootpath + 'etc/users.json'); 
-const groups = import(requirerootpath + 'etc/groups.json')
+const groups = import(requirerootpath + 'etc/groups.json'); // ZAZA!!!!
 
 const rl = readline.createInterface({
   input:  process.stdin,
@@ -33,14 +32,7 @@ const rl = readline.createInterface({
   terminal: true
 });
 
-/* rl._writeToOutput = function _writeToOutput(stringToWrite) {
-  if (rl.stdoutMuted)
-    rl.output.write("*");
-  else
-    rl.output.write(stringToWrite);
-}; */ // TODO: Reimplement this. 
-
-let context = { // Pass an object with essential information and global functions. Some of these should be APIs instead -- colors & paths?
+let context = { // Pass an object with essential information
   "user": "",
   "users": users,
   "groups": groups,
@@ -58,10 +50,9 @@ let context = { // Pass an object with essential information and global function
 let commands = context.commands;
 let cmddir = fs.readdirSync(rootpath + "./commands")
 
-cmddir.forEach(cmd => {
-  console.log("cmd: ", cmd)
-  import(cmd).then(finished => {
-    commands[finished.name] = finished
+cmddir.forEach(element => {
+  import("./commands/" + element).then(cmd => {
+    commands[cmd.name] = cmd
   })
 })
 
