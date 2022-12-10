@@ -5,8 +5,7 @@
         "target": "ES2022",
         "moduleResolution": "node",
         "module": "ESNext",
-        "allowSyntheticDefaultImports": true,
-        "esModuleInterop": true
+        "allowSyntheticDefaultImports": true
     },
     "include": [
         "./src/**/**/**/**/*"

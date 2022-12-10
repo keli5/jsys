@@ -1,6 +1,7 @@
 import { getPermissions } from "../libraries/permapi";
 import { returncode } from "../libraries/rcodeapi";
 import paths from "path";
+import { green, red, white, bold} from "colors";
 
 module.exports = {
     name: "djsh",
@@ -21,7 +22,7 @@ module.exports = {
         ctx.rl.on('line', (line) => {
             line = line.trim()
             line = line.split(' ')
-            let command = line.shift()
+            let command: string = line.shift()
             let args = line;
             let lastReturnCode;
         
@@ -31,13 +32,13 @@ module.exports = {
                 result = ctx.commands[command].execute(ctx, args)?.code
                 lastReturnCode = result || returncode.OK
               } catch (err) {
-                console.log(ctx.color.red(err.stack))
+                console.log((err.stack as string).red)
                 lastReturnCode = result || returncode.ERROR
               }
               let newline = result ? "\n" : ""
               process.stdout.write(result + newline)
             } else {
-              console.log('command not found: ' + ctx.color.red(command))
+              console.log('command not found: ' + command.red)
               lastReturnCode = returncode.ERROR
             }
             if (exitFlag) {
@@ -59,20 +60,21 @@ module.exports = {
 
 function updatePrompt(admin, ctx, lrc) {
   let promptChar = admin ? "#" : "$"
-  let promptCharColor = ctx.color.white
+  let promptCharColor = white
   let parsedPromptChar = promptCharColor(promptChar)
 
-  let usernameColor = admin ? ctx.color.red : ctx.color.green
+  let usernameColor = admin ? red : green
   let fuser = usernameColor.bold(ctx.user.trim());
   
   let fpath = paths.resolve(ctx.path) // FORMATTED PATH only!
   fpath = fpath.replace("/home/" + ctx.user, "~")
-  fpath = ctx.color.magenta.bold(`[${fpath.trim()}]`);
+  fpath = fpath.trim();
+  fpath = fpath.magenta
 
   if (lrc == returncode.OK) {
-      promptCharColor = ctx.color.green
+      promptCharColor = green
   } else {
-      promptCharColor = ctx.color.red
+      promptCharColor = red
   }
   parsedPromptChar = promptCharColor(promptChar)
 

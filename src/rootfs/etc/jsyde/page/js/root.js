@@ -1,5 +1,5 @@
 let root = document.body;
-let panel = document.getElementById("panel")
+let panel = $("#panel")
 
 root.style.backgroundImage = `url("${document.location + theme.wallpaper}")`
 root.style.backgroundSize  = "cover"

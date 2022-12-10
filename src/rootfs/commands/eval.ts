@@ -1,4 +1,5 @@
 import { returncode } from "../libraries/rcodeapi";
+import "colors";
 
 module.exports = {
     name: "eval",
@@ -9,7 +10,7 @@ module.exports = {
         rtobj["stdout"] = eval(args.join(' '))
         rtobj["code"] = returncode.OK
       } catch (err) {
-        rtobj["stdout"] = ctx.color.red(err.stack);
+        rtobj["stdout"] = (err.stack as string).red;
         rtobj["code"] = returncode.ERROR
       }
 
