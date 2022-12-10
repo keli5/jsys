@@ -1,18 +1,10 @@
 const express = require("express")
 const { parseArgs } = require("util")
-const fsapi = require("../libraries/fsapi")
 
 module.exports = {
     name: "jsyde",
     desc: "JSys Desktop Environment",
     execute: (ctx, args) => {
-        // first things first:
-        initUserDataDirs(ctx.user)
-        let theme = fsapi.read(`/home/${ctx.user}/.config/jsyde/themes/default.json`)
-        theme = JSON.parse(theme)
-        console.log(`Using theme ${theme.name}`)
-        console.log(JSON.stringify(theme, null, 2))
-
         const appdata = "../etc/jsyde/"
         const pagedir = "../rootfs/etc/jsyde/page" // son of a bitch
         let cleanedArgs = args
@@ -39,24 +31,13 @@ module.exports = {
         app.get("/", (req, res) => {
             res.render(pagedir + "/root.ejs", {
                 "context": ctx,
-                "theme": JSON.stringify(theme)
+                "theme": {
+                    "wallpaper": "asset/wallpaper/default.jpg"
+                },
             })
         })
         app.use(express.static("./rootfs/etc/jsyde/"))
         app.listen(port)
         console.log("jsyde listening on " + port)
-    }
-}
-
-function initUserDataDirs(user) {
-    try {
-        fsapi.mkdir(`/home/${user}/.config`)
-        fsapi.mkdir(`/home/${user}/.config/jsyde`)
-        fsapi.mkdir(`/home/${user}/.config/jsyde/themes`)
-    } catch {
-        // already exists
-    }
-    if (!fsapi.exists(`/home/${user}/.config/jsyde/themes/default.json`)) {
-        fsapi.copy("/etc/defaults/jsyde/themes/default.json", `/home/${user}/.config/jsyde/themes/default.json`)
     }
 }

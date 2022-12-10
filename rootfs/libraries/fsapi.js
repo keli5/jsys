@@ -21,7 +21,6 @@ exports.ePath = (path) => {
 
 exports.expandPath = (ctx, path, ts = true) => {
     let newpath = ""
-    path = path.replace("~", "/home/" + ctx.user)
     if (path.startsWith("/")) {
         newpath = path
     } else {
@@ -95,5 +94,6 @@ exports.move = (src, dest) => {
 
 exports.mkdir = (path) => {
     return fs.mkdirSync(_absolutePath(path))
+    
 }
 
