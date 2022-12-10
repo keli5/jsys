@@ -14,5 +14,3 @@ exports.returncode = Object.freeze({
     ERROR_INSUFFICIENT_PERMISSIONS: Symbol(8),
     ERROR_INVALID_ARGUMENT: Symbol(9)
 })
-
-export {}

@@ -1,6 +1,5 @@
-const { returncodes } = require("../libraries/rcodeapi")
-const { write, copy, mkdir } = require("../libraries/fsapi")
-const fread = require("../libraries/fsapi").read
+const { returncode } = require("../libraries/rcodeapi")
+const { read, write, copy, mkdir } = require("../libraries/fsapi")
 const { getPermissions } = require("../libraries/permapi")
 const { parseArgs } = require("util")
 const sha256 = require("js-sha256").sha256
@@ -31,22 +30,21 @@ module.exports = {
         if (!values.username) {
             module.exports.help()
             return {
-                code: returncodes.ERROR_MISSING_ARGUMENT
+                code: returncode.ERROR_MISSING_ARGUMENT
             }
         }
         if (!getPermissions(ctx, ctx.user).includes("admin")) {
             return {
                 stdout: "you are not admin",
-                code: returncodes.ERROR_INSUFFICIENT_PERMISSIONS
+                code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
             }
         }
-
-        let shells:    Array<string> = fread("/etc/shells.txt").split("\n")
-        let users:     object        = JSON.parse(fread("/etc/users.json"))
-        let groups:    object        = JSON.parse(fread("/etc/groups.json"))
-        let latestuid: number        = 0
-
-        for (let value of (<any>Object).values(users)) { // ew?
+        let shells = read("/etc/shells.txt").split("\n")
+        let users  = JSON.parse(read("/etc/users.json"))
+        let latestuid = 0
+        let groups = JSON.parse(read("/etc/groups.json"))
+        for (const [key, value] of Object.entries(users)) {
+            key; // shut up eslint
             if (value.uid > latestuid) {
                 latestuid = value.uid
             }
@@ -66,12 +64,12 @@ module.exports = {
             }
         }
         users[uname] = {};
-        users[uname]["name"]        = uname
-        users[uname]["pwhashed"]    = sha256(values.password || "") 
+        users[uname]["name"] = uname
+        users[uname]["pwhashed"] = sha256(values.password || "") 
         users[uname]["permissions"] = []
-        users[uname]["uid"]         = latestuid + 1
-        users[uname]["groups"]      = [String(latestuid + 1)]
-        users[uname]["shell"]       = shell
+        users[uname]["uid"] = latestuid + 1
+        users[uname]["groups"] = [String(latestuid + 1)]
+        users[uname]["shell"] = shell
         mkdir("/home/")
         copy("/etc/skel", "/home/" + uname)
 
