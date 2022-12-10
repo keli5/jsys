@@ -10,11 +10,10 @@ global.arrayRemove = function(what: any) {
 };
 
 import EventEmitter from "events";
-import readline from "readline";
-import "colors";
-import fs from "fs";
-import { createRequire } from "module";
-const require = createRequire(import.meta.url);
+import * as readline from "readline" ;
+import * as c from "colors";
+import * as fs from "fs";
+
 const rootpath  = "./src/rootfs/"
 const requirerootpath = "./rootfs/"
 
@@ -58,4 +57,12 @@ let context = { // Pass an object with essential information and global function
 
 let commands = context.commands;
 let cmddir = fs.readdirSync(rootpath + "./commands")
-console.log(cmddir)
+
+cmddir.forEach(cmd => {
+  console.log("cmd: ", cmd)
+  import(cmd).then(finished => {
+    commands[finished.name] = finished
+  })
+})
+
+commands["login"].execute(context)
