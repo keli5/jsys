@@ -2,8 +2,16 @@
 <html>
     <head>
         <title><%= context.os.distribution || "jsys" %></title>
+        <link rel="stylesheet" href="/page/css/root.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
     </head>
     <body>
+
+        <div class="window" title="Welcome to Jsys!" id="win-1">
+            <p>Hello!</p>
+        </div>
+
         <script> // this is gross.
             let theme = '<%- theme %>'  // 
         </script>

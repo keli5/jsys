@@ -1,0 +1,17 @@
+:root {
+    font-family: sans, sans-serif;
+}
+
+.ui-dialog-titlebar {
+    background-color: dodgerblue;
+}
+
+.ui-dialog {
+    background-color: whitesmoke;
+}
+
+.ui-dialog-titlebar-close {
+    all: unset;
+    float: right;
+    background-color: darkred;
+}
