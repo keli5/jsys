@@ -1,11 +1,26 @@
 const sha256 = require("js-sha256").sha256
 const { exists } = require("../libraries/fsapi")
+const readline = require('readline');
 
 module.exports = {
     name: "login",
     desc: "",
     hidden: true,
     execute: (ctx) => {
+        if (ctx.rl) ctx.rl.close()
+        ctx.rl = readline.createInterface({
+            input:  process.stdin,
+            output: process.stdout,
+            terminal: true
+        });
+          
+        ctx.rl._writeToOutput = function _writeToOutput(stringToWrite) {
+            if (ctx.rl.stdoutMuted)
+              ctx.rl.output.write("*");
+            else
+              ctx.rl.output.write(stringToWrite);
+        };
+
         ctx.rl.question('Login: ', (username) => {
             if (!ctx.users[username]) {
                 console.log(ctx.color.red('Invalid username'));

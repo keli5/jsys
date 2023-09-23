@@ -67,6 +67,8 @@ function updatePrompt(admin, ctx, lrc) {
   
   let fpath = paths.resolve(ctx.path) // FORMATTED PATH only!
   fpath = fpath.replace("/home/" + ctx.user, "~")
+  fpath = fpath.replace(/[A-Z]:\\/, "/") // windowsy moment
+  fpath = fpath.replace("\\", "/")
   fpath = ctx.color.magenta.bold(`[${fpath.trim()}]`);
 
   if (lrc == returncode.OK) {

@@ -6,3 +6,4 @@ rootfs/etc/users.json
 todo.txt
 rootfs/home/*
 !rootfs/home/root
+.vscode

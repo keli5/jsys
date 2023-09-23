@@ -25,25 +25,12 @@ defaultfiles_etc.forEach(item => {
 const users = require(rootpath + 'etc/users.json'); 
 const groups = require(rootpath + 'etc/groups.json')
 
-const rl = readline.createInterface({
-  input:  process.stdin,
-  output: process.stdout,
-  terminal: true
-});
-
-rl._writeToOutput = function _writeToOutput(stringToWrite) {
-  if (rl.stdoutMuted)
-    rl.output.write("*");
-  else
-    rl.output.write(stringToWrite);
-};
-
 let context = { // Pass an object with essential information
   "user": "",
   "users": users,
   "groups": groups,
   "path": "",
-  "rl": rl,
+  "rl": undefined,
   "color": c,
   "commands": {},
   "env": {},
