@@ -1,5 +1,5 @@
 // OK will always be 0, ERROR will always be 1. For consistency
-exports.version = "0.10.0"
+exports.version = "0.11.0"
 exports.description = "rcodeapi.js, written by keli5 for JSys to work with program return codes. version " + exports.version
 
 exports.returncode = Object.freeze({
@@ -12,5 +12,6 @@ exports.returncode = Object.freeze({
     ERROR_MISSING_ARGUMENT: Symbol(6),
     ERROR_ALREADY_EXISTS: Symbol(7),
     ERROR_INSUFFICIENT_PERMISSIONS: Symbol(8),
-    ERROR_INVALID_ARGUMENT: Symbol(9)
+    ERROR_INVALID_ARGUMENT: Symbol(9),
+    ERROR_NO_ENTITY: Symbol(10)
 })
