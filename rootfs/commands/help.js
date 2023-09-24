@@ -6,8 +6,17 @@ module.exports = {
     execute: (ctx, args) => {
       let stdout = "";
       if (args.length != 0) {
+        try {
+          ctx.commands[args[0]].help()
+        } catch (_) {
+          return {
+            stdout: "no help available for this command",
+            code: returncode.ERROR_NO_ENTITY
+          }
+        }
         return {
-            code: returncode.ERROR_NOT_IMPLEMENTED
+          stdout: "",
+          code: returncode.OK
         }
       }
       Object.keys(ctx.commands).forEach(cmdname => {
