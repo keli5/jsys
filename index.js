@@ -37,7 +37,7 @@ let context = { // Pass an object with essential information
   "events": new EventEmitter(),
   "os": {
     "distribution": "jsys_base",
-    "version": "0.15.0"
+    "version": "0.22.0-cc"
   }
 }
 
