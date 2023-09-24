@@ -15,6 +15,10 @@ module.exports = {
             strict: false,
             tokens: true,
             options: {
+                "verbose": {
+                    type: "boolean",
+                    short: "v"
+                },
                 "username": {
                     type: "string",
                 },
@@ -27,6 +31,8 @@ module.exports = {
             }
         })
 
+        verbose = values["verbose"] ? false : true;
+        
         if (!values.username) {
             module.exports.help()
             return {
@@ -49,6 +55,7 @@ module.exports = {
                 latestuid = value.uid
             }
         }
+        if (verbose) console.log("latest uid is " + latestuid)
         let uname = values.username.toLowerCase()
         if (users[uname]) {
             return {
@@ -57,6 +64,7 @@ module.exports = {
             }
         }
         let shell = values.shell || "djsh"
+        if (verbose) console.log("shell: " + shell)
         if (!shells.includes(shell)) {
             return {
                 stdout: shell + " is not a valid shell",
@@ -70,15 +78,23 @@ module.exports = {
         users[uname]["uid"] = latestuid + 1
         users[uname]["groups"] = [String(latestuid + 1)]
         users[uname]["shell"] = shell
-        mkdir("/home/")
+        try {
+            mkdir("/home/")
+        } catch (e) {
+            if (verbose) console.log("/home/ already exists")
+        }
         copy("/etc/skel", "/home/" + uname)
+        if (verbose) console.log("copied skeleton directory")
 
         groups[String(latestuid + 1)] = {}
         groups[String(latestuid + 1)]["name"] = uname
         groups[String(latestuid + 1)]["permissions"] = []
+        if (verbose) console.log("configured user group defaults")
 
         write("/etc/users.json", JSON.stringify(users, null, 2))
         write("/etc/groups.json", JSON.stringify(groups, null, 2))
+        if (verbose) console.log("wrote out files")
+        if (verbose) console.log("done")
     },
     help: () => {
         console.log(module.exports.name + ":", module.exports.desc)
@@ -89,6 +105,8 @@ module.exports = {
         console.log("?   --password [password]")
         console.log("?   --shell [shell]")
         console.log("---")
+        console.log("flags:")
+        console.log("    --verbose, -v          print extra information")
         console.log("! is a required argument, ? is optional")
     }
 }
