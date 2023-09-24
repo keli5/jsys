@@ -7,7 +7,7 @@ const sha256 = require("js-sha256").sha256
 module.exports = {
     name: "adduser",
     desc: "Add a user to the system",
-    usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>]",
+    usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>] [flags]",
     execute: (ctx, args) => {
         let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
             args: args,
@@ -18,6 +18,10 @@ module.exports = {
                 "verbose": {
                     type: "boolean",
                     short: "v"
+                },
+                "no-create-home": {
+                    type: "boolean",
+                    short: "n"
                 },
                 "username": {
                     type: "string",
@@ -45,7 +49,7 @@ module.exports = {
                 code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
             }
         }
-        let shells = read("/etc/shells.txt").split("\r\n").split("\n")
+        let shells = read("/etc/shells.txt").split("\r\n").join("\n").split("\n")
         let users  = JSON.parse(read("/etc/users.json"))
         let latestuid = 0
         let groups = JSON.parse(read("/etc/groups.json"))
@@ -73,18 +77,24 @@ module.exports = {
         }
         users[uname] = {};
         users[uname]["name"] = uname
-        users[uname]["pwhashed"] = sha256(values.password || "") 
+        if (!values.password) {
+            users[uname]["pwhashed"] = ""
+        } else {
+            users[uname]["pwhashed"] = sha256(values.password)
+        }
         users[uname]["permissions"] = []
         users[uname]["uid"] = latestuid + 1
         users[uname]["groups"] = [String(latestuid + 1)]
         users[uname]["shell"] = shell
-        try {
-            mkdir("/home/")
-        } catch (e) {
-            if (verbose) console.log("/home/ already exists")
+        if (!values["no-create-home"]) {
+            try {
+                mkdir("/home/")
+            } catch (e) {
+                if (verbose) console.log("/home/ already exists")
+            }
+            copy("/etc/skel", "/home/" + uname)
+            if (verbose) console.log("copied skeleton directory")
         }
-        copy("/etc/skel", "/home/" + uname)
-        if (verbose) console.log("copied skeleton directory")
 
         groups[String(latestuid + 1)] = {}
         groups[String(latestuid + 1)]["name"] = uname
@@ -106,7 +116,8 @@ module.exports = {
         console.log("?   --shell [shell]")
         console.log("---")
         console.log("flags:")
-        console.log("    --verbose, -v          print extra information")
+        console.log("    --verbose, -v                 print extra information")
+        console.log("    --no-create-home, -n          don't create a home directory for this user")
         console.log("! is a required argument, ? is optional")
     }
 }
