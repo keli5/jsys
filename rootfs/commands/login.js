@@ -9,16 +9,17 @@ module.exports = {
     execute: (ctx) => {
         if (ctx.rl) ctx.rl.close()
         ctx.rl = readline.createInterface({
-            input:  process.stdin,
+            input: process.stdin,
             output: process.stdout,
             terminal: true
         });
-          
+
         ctx.rl._writeToOutput = function _writeToOutput(stringToWrite) {
-            if (ctx.rl.stdoutMuted)
-              ctx.rl.output.write("*");
-            else
-              ctx.rl.output.write(stringToWrite);
+            if (ctx.rl.stdoutMuted) {
+                if (!stringToWrite.includes("\n")) ctx.rl.output.write("*");
+            } else {
+                ctx.rl.output.write(stringToWrite);
+            }
         };
 
         ctx.rl.question('Login: ', (username) => {

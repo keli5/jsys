@@ -62,14 +62,14 @@ function updatePrompt(admin, ctx, lrc) {
   let promptCharColor = ctx.color.white
   let parsedPromptChar = promptCharColor(promptChar)
 
-  let usernameColor = admin ? ctx.color.red : ctx.color.green
+  let usernameColor = admin ? ctx.color.yellow : ctx.color.cyan
   let fuser = usernameColor.bold(ctx.user.trim());
   
   let fpath = paths.resolve(ctx.path) // FORMATTED PATH only!
   fpath = fpath.replace("/home/" + ctx.user, "~")
   fpath = fpath.replace(/[A-Z]:\\/, "/") // windowsy moment
   fpath = fpath.replace("\\", "/")
-  fpath = ctx.color.magenta.bold(`[${fpath.trim()}]`);
+  fpath = ctx.color.red.bold(`[${fpath.trim()}]`);
 
   if (lrc == returncode.OK) {
       promptCharColor = ctx.color.green
