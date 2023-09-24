@@ -31,7 +31,7 @@ module.exports = {
             }
         })
 
-        verbose = values["verbose"] ? false : true;
+        verbose = values["verbose"] ? true : false;
         
         if (!values.username) {
             module.exports.help()
@@ -45,7 +45,7 @@ module.exports = {
                 code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
             }
         }
-        let shells = read("/etc/shells.txt").split("\n")
+        let shells = read("/etc/shells.txt").split("\r\n").split("\n")
         let users  = JSON.parse(read("/etc/users.json"))
         let latestuid = 0
         let groups = JSON.parse(read("/etc/groups.json"))
