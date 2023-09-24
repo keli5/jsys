@@ -2,9 +2,7 @@ module.exports = {
     name: 'nologin',
     desc: '',
     execute: (ctx) => {
-      return {
-        "stdout": "this user cannot be logged into interactively",
-        "code": 1
-      }
+      console.log("\nthis user cannot be logged into interactively")
+      ctx.commands["login"].execute(ctx)
     }
 }
