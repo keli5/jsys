@@ -15,7 +15,8 @@ module.exports = {
         }
         let admin = getPermissions(ctx, ctx.user).includes("admin")
         ctx.env["SHELL"] = "djsh"
-
+        
+        if (ctx.user == "root" && ctx.users[ctx.user].pwhashed == "") console.log(ctx.color.red("You should really change the root password! Root currently has no password!"))
         updatePrompt(admin, ctx, returncode.OK)
         ctx.rl.prompt()
         ctx.rl.on('line', (line) => {
