@@ -4,6 +4,8 @@ const { getPermissions } = require("../libraries/permapi")
 const { parseArgs } = require("util")
 const sha256 = require("js-sha256").sha256
 
+const badnamesList = ["root", "global"]
+
 module.exports = {
     name: "adduser",
     desc: "Add a user to the system",
@@ -23,6 +25,10 @@ module.exports = {
                     type: "boolean",
                     short: "n"
                 },
+                "badnames": {
+                    type: "boolean",
+                    short: "b"
+                },
                 "username": {
                     type: "string",
                 },
@@ -35,7 +41,8 @@ module.exports = {
             }
         })
 
-        verbose = values["verbose"] ? true : false;
+        verbose = Boolean(values["verbose"])
+        badnames = Boolean(values["badnames"])
         
         if (!values.username) {
             module.exports.help()
@@ -47,6 +54,12 @@ module.exports = {
             return {
                 stdout: "you are not admin",
                 code: returncode.ERROR_INSUFFICIENT_PERMISSIONS
+            }
+        }
+        if (!badnames && badnamesList.includes(values.username.toLowerCase())) {
+            return {
+                stdout: "disallowed username",
+                code: returncode.ERROR_INVALID_ARGUMENT
             }
         }
         let shells = read("/etc/shells.txt").split("\r\n").join("\n").split("\n")
@@ -118,6 +131,7 @@ module.exports = {
         console.log("flags:")
         console.log("    --verbose, -v                 print extra information")
         console.log("    --no-create-home, -n          don't create a home directory for this user")
+        console.log("    --badnames, -b                allow bad usernames (this can create problematic users)")
         console.log("! is a required argument, ? is optional")
     }
 }
