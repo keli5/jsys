@@ -14,6 +14,7 @@ const readline = require('readline');
 const c = require('colors/safe');
 const fs = require('fs');
 const rootpath  = "./rootfs/"
+const version = require('child_process').execSync('git rev-parse --short HEAD').toString().trim()
 
 const defaultfiles_etc = ["users.json", "groups.json"]
 defaultfiles_etc.forEach(item => {
@@ -46,7 +47,7 @@ let context = { // Pass an object with essential information
   "events": new EventEmitter(),
   "os": {
     "distribution": "jsys_base",
-    "version": require('child_process').execSync('git rev-parse HEAD').toString().trim()
+    "version": version
   }
 }
 
