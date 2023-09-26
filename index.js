@@ -56,6 +56,12 @@ let cmddir = fs.readdirSync(rootpath + "./commands")
 cmddir.forEach(element => {
   let cmd = require(rootpath + "./commands/" + element)
   commands[cmd.name] = cmd
+  if (!commands[cmd.name].help) {
+    commands[cmd.name].help = () => {
+      console.log(cmd.name + ":", cmd.desc)
+      console.log("usage:", cmd.name, cmd.usage)
+    }
+  }
 });
 
 
