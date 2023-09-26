@@ -7,7 +7,7 @@ module.exports = {
       let stdout = ""
       Object.keys(ctx.users).forEach(element => {
         let user = ctx.users[element]
-        stdout += `${user.name} / ${user.uid} / ${user.groups.join(",")}\n`
+        stdout += `${user.name}: uid ${user.uid} / gid(s) ${user.groups.join(",")}\n`
       });
 
       return {
