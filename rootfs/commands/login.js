@@ -23,6 +23,7 @@ module.exports = {
         };
 
         ctx.rl.question('Login: ', (username) => {
+            ctx.users = ctx.getUsers();
             if (!ctx.users[username]) {
                 console.log(ctx.color.red('Invalid username'));
                 ctx.commands["login"].execute(ctx)

@@ -22,13 +22,22 @@ defaultfiles_etc.forEach(item => {
   }
 })
 
-const users = require(rootpath + 'etc/users.json'); 
-const groups = require(rootpath + 'etc/groups.json')
+function getUsers() {
+  delete require.cache[require.resolve(rootpath + 'etc/users.json')];
+  return require(rootpath + 'etc/users.json'); 
+}
+
+function getGroups() {
+  delete require.cache[require.resolve(rootpath + 'etc/groups.json')];
+  return require(rootpath + 'etc/groups.json'); 
+}
 
 let context = { // Pass an object with essential information
   "user": "",
-  "users": users,
-  "groups": groups,
+  "users": getUsers(),
+  "groups": getGroups(),
+  "getUsers": getUsers,
+  "getGroups": getGroups,
   "path": "",
   "rl": undefined,
   "color": c,
@@ -48,5 +57,7 @@ cmddir.forEach(element => {
   let cmd = require(rootpath + "./commands/" + element)
   commands[cmd.name] = cmd
 });
+
+
 
 commands["login"].execute(context)

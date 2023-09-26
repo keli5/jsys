@@ -117,7 +117,6 @@ module.exports = {
         write("/etc/users.json", JSON.stringify(users, null, 2))
         write("/etc/groups.json", JSON.stringify(groups, null, 2))
         if (verbose) console.log("wrote out files")
-        console.log("done - restart for the changes to take effect")
     },
     help: () => {
         console.log(module.exports.name + ":", module.exports.desc)
