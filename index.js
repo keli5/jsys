@@ -46,7 +46,7 @@ let context = { // Pass an object with essential information
   "events": new EventEmitter(),
   "os": {
     "distribution": "jsys_base",
-    "version": "0.22.0-cc"
+    "version": require('child_process').execSync('git rev-parse HEAD').toString().trim()
   }
 }
 
