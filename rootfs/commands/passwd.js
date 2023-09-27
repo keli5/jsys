@@ -22,7 +22,6 @@ module.exports = {
         })
 
         user = values["user"] || ctx.user
-        console.log(user)
 
         if (user != ctx.user) {
             if (!getPermissions(ctx, ctx.user).includes("admin")) {
@@ -34,7 +33,7 @@ module.exports = {
             }
         }
         newPass = ""
-        ctx.rl.question('New password: ', (password) => {
+        ctx.rl.question(`New password for ${user}: `, (password) => {
             password = password.replace("\r", "").replace("\n", "").trim()
             if (!password) {
                 console.log("no password provided, exiting")
@@ -52,7 +51,7 @@ module.exports = {
                     }
                 } else {
                     let users = JSON.parse(read("/etc/users.json"))
-                    users[ctx.user]["pwhashed"] = sha256(confirm)
+                    users[user]["pwhashed"] = sha256(confirm)
                     write("/etc/users.json", JSON.stringify(users, null, 2))
                     console.log("password changed for " + user)
                     ctx.rl.prompt()

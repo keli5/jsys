@@ -10,6 +10,7 @@ module.exports = {
     name: "adduser",
     desc: "Add a user to the system",
     usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>] [flags]",
+    controlsReadline: true,
     execute: (ctx, args) => {
         let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
             args: args,
@@ -29,20 +30,24 @@ module.exports = {
                     type: "boolean",
                     short: "b"
                 },
+                "no-password": {
+                    type: "boolean",
+                    short: "p"
+                },
                 "username": {
                     type: "string",
-                },
-                "password": {
-                    type: "string"
+                    short: "u"
                 },
                 "shell": {
                     type: "string",
+                    short: "s"
                 }
             }
         })
 
         verbose = Boolean(values["verbose"])
         badnames = Boolean(values["badnames"])
+        nopass = Boolean(values["no-password"])
         
         if (!values.username) {
             module.exports.help()
@@ -90,11 +95,6 @@ module.exports = {
         }
         users[uname] = {};
         users[uname]["name"] = uname
-        if (!values.password) {
-            users[uname]["pwhashed"] = ""
-        } else {
-            users[uname]["pwhashed"] = sha256(values.password)
-        }
         users[uname]["permissions"] = []
         users[uname]["uid"] = latestuid + 1
         users[uname]["groups"] = [String(latestuid + 1)]
@@ -117,20 +117,28 @@ module.exports = {
         write("/etc/users.json", JSON.stringify(users, null, 2))
         write("/etc/groups.json", JSON.stringify(groups, null, 2))
         if (verbose) console.log("wrote out files")
+        if (!nopass) {
+            ctx.commands["passwd"].execute(ctx, ["--user", uname])
+        } else {
+            users[uname]["pwhashed"] = ""
+            write("/etc/users.json", JSON.stringify(users, null, 2))
+            if (verbose) console.log("performed users rewrite: no password")
+            ctx.rl.prompt()
+        }
     },
     help: () => {
         console.log(module.exports.name + ":", module.exports.desc)
         console.log("usage:", module.exports.name, module.exports.usage)
         console.log("---")
         console.log("arguments:")
-        console.log("!   --username <username>")
-        console.log("?   --password [password]")
-        console.log("?   --shell [shell]")
+        console.log("!   --username, -u <username>")
+        console.log("?   --shell, -s [shell]")
         console.log("---")
         console.log("flags:")
         console.log("    --verbose, -v                 print extra information")
         console.log("    --no-create-home, -n          don't create a home directory for this user")
         console.log("    --badnames, -b                allow bad usernames (this can create problematic users)")
+        console.log("    --no-password, -p             do not set a password for this user")
         console.log("! is a required argument, ? is optional")
     }
 }
