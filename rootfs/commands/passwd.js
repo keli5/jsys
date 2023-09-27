@@ -46,6 +46,8 @@ module.exports = {
                 if (confirm != password) {
                     console.log("password does not match")
                     ctx.rl.prompt()
+                    delete password
+                    delete newPass
                     return {
                         code: returncode.ERROR_INVALID_ARGUMENT
                     }
@@ -55,6 +57,8 @@ module.exports = {
                     write("/etc/users.json", JSON.stringify(users, null, 2))
                     console.log("password changed for " + user)
                     ctx.rl.prompt()
+                    delete password
+                    delete newPass
                     return {
                         code: returncode.OK
                     }
