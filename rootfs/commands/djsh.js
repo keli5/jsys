@@ -25,15 +25,20 @@ module.exports = {
             let command = line.shift()
             let args = line;
             let lastReturnCode = ""
+            let execution = undefined
+            let action = undefined
         
             if (ctx.commands[command]) {
               let result = ""
+              
               try {
-                result = ctx.commands[command].execute(ctx, args)?.stdout || ""
+                execution = ctx.commands[command].execute(ctx, args)
+                action = execution?.action || undefined
+                result = execution?.stdout || ""
                 lastReturnCode = result?.code || returncode.OK
               } catch (err) {
                 console.log(ctx.color.red(err.stack))
-                lastReturnCode = result?.code || returncode.ERROR
+                lastReturnCode = result?.code || returncode.ERROR_INVOCATION
               }
               let newline = result ? "\n" : ""
               process.stdout.write(result + newline)
@@ -47,7 +52,7 @@ module.exports = {
             } else {
               updatePrompt(admin, ctx, lastReturnCode)
             }
-            ctx.rl.prompt();
+            if (!ctx.commands[command]?.controlsReadline || action == "reprompt") ctx.rl.prompt();
         }); 
 
         ctx.events.on("exitShell", (ctx) => {
