@@ -1,4 +1,5 @@
-const { expandPath, copy } = require("../libraries/fsapi")
+const { expandPath, copy, exists, isDir } = require("../libraries/fsapi")
+const { returncode } = require("../libraries/rcodeapi")
 
 module.exports = {
     name: "cp",
@@ -9,6 +10,11 @@ module.exports = {
         let dest = args[1]
         source = expandPath(ctx, source, false)
         dest = expandPath(ctx, dest, false)
+        
+        if (!source || !dest) return {
+            stdout: "no path specified for " + (!source ? "source" : "destination"),
+            code: returncode.ERROR_INVALID_ARGUMENT
+        }
 
         copy(source, dest)
         return {

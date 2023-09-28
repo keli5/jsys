@@ -21,6 +21,7 @@ exports.ePath = (path) => {
 
 exports.expandPath = (ctx, path, ts = true) => {
     let newpath = ""
+    if (!path) return undefined
     if (path.startsWith("/")) {
         newpath = path
     } else {
