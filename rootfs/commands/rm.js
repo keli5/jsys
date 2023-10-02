@@ -1,4 +1,5 @@
-const { expandPath, isDir, remove } = require("../libraries/fsapi")
+const { assert } = require("console")
+const { expandPath, isDir, remove, exists } = require("../libraries/fsapi")
 const { returncode } = require("../libraries/rcodeapi")
 const { parseArgs } = require("util") // stability 1 - i'm in danger lol
 

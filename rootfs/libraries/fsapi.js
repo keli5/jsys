@@ -84,7 +84,7 @@ exports.copy = (src, dest) => {
 }
 
 exports.remove = (path) => {
-    return fs.rmSync(path, {
+    return fs.rmSync(_absolutePath(path), {
         recursive: true,
         force: true
     })
