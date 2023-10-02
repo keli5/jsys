@@ -1,10 +1,10 @@
-Array.prototype.remove = function() {
+Array.prototype.remove = function () {
   var what, a = arguments, L = a.length, ax;
   while (L && this.length) {
-      what = a[--L];
-      while ((ax = this.indexOf(what)) !== -1) {
-          this.splice(ax, 1);
-      }
+    what = a[--L];
+    while ((ax = this.indexOf(what)) !== -1) {
+      this.splice(ax, 1);
+    }
   }
   return this;
 };
@@ -13,8 +13,17 @@ const EventEmitter = require("events")
 const readline = require('readline');
 const c = require('colors/safe');
 const fs = require('fs');
-const rootpath  = "./rootfs/"
+const rootpath = "./rootfs/"
 const version = require('child_process').execSync('git rev-parse --short HEAD').toString().trim()
+
+const unlinkTmpDir = () => {
+  if (fs.existsSync(rootpath + "./tmp")) {
+    fs.rmSync(rootpath + "./tmp", { recursive: true, force: true });
+  }
+}
+
+unlinkTmpDir();
+fs.mkdirSync(rootpath + "./tmp")
 
 const defaultfiles_etc = ["users.json", "groups.json"]
 defaultfiles_etc.forEach(item => {
@@ -25,12 +34,12 @@ defaultfiles_etc.forEach(item => {
 
 function getUsers() {
   delete require.cache[require.resolve(rootpath + 'etc/users.json')];
-  return require(rootpath + 'etc/users.json'); 
+  return require(rootpath + 'etc/users.json');
 }
 
 function getGroups() {
   delete require.cache[require.resolve(rootpath + 'etc/groups.json')];
-  return require(rootpath + 'etc/groups.json'); 
+  return require(rootpath + 'etc/groups.json');
 }
 
 let context = { // Pass an object with essential information
@@ -65,6 +74,6 @@ cmddir.forEach(element => {
   }
 });
 
-
+process.on("exit", unlinkTmpDir)
 
 commands["login"].execute(context)
