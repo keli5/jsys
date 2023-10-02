@@ -1,6 +1,7 @@
 const fs = require("fs")
+const { returncode } = require("./rcodeapi")
 
-exports.version = "0.19.0"
+exports.version = "0.20.0"
 exports.description = "fsapi.js, written by keli5 for JSys to work with the emulated filesystem. version " + exports.version
 
 const rootpath = process.cwd() + "/rootfs/" // This assumes that cwd contains the rootfs folder.
@@ -95,6 +96,16 @@ exports.move = (src, dest) => {
 
 exports.mkdir = (path) => {
     return fs.mkdirSync(_absolutePath(path))
-    
+}
+
+exports.touch = (path) => {
+    ap = _absolutePath(path)
+    if (!exports.exists(ap)) {
+        return fs.writeFileSync(ap, "")
+    } else {
+        return {
+            code: returncode.ERROR_ALREADY_EXISTS
+        }
+    }
 }
 
