@@ -9,7 +9,7 @@ const badnamesList = ["root", "global"]
 module.exports = {
     name: "adduser",
     desc: "Add a user to the system",
-    usage: "--username <USERNAME> [--password <PASSWORD>] [--shell <SHELL>] [flags]",
+    usage: "--username <USERNAME> [--shell <SHELL>] [flags]",
     controlsReadline: true,
     execute: (ctx, args) => {
         let {values, _, tokens} = parseArgs({ // eslint-disable-line no-unused-vars
@@ -41,7 +41,7 @@ module.exports = {
                 "shell": {
                     type: "string",
                     short: "s"
-                }
+                },
             }
         })
 

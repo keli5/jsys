@@ -19,6 +19,15 @@ module.exports = {
         if (ctx.user == "root" && ctx.users[ctx.user].pwhashed == "") console.log(ctx.color.red("You should really change the root password! Root currently has no password!"))
         updatePrompt(admin, ctx, returncode.OK)
         ctx.rl.prompt()
+
+        ctx.rl._writeToOutput = function _writeToOutput(stringToWrite) {
+          if (ctx.rl.stdoutMuted) {
+              if (!stringToWrite.includes("\n")) ctx.rl.output.write("*");
+          } else {
+              ctx.rl.output.write(stringToWrite);
+          }
+        };
+
         ctx.rl.on('line', (line) => {
             line = line.trim()
             line = line.split(' ')

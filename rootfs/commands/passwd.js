@@ -35,8 +35,10 @@ module.exports = {
         newPass = ""
         ctx.rl.question(`New password for ${user}: `, (password) => {
             password = password.replace("\r", "").replace("\n", "").trim()
+            ctx.rl.stdoutMuted = false
             if (!password) {
                 console.log("no password provided, exiting")
+                ctx.rl.stdoutMuted = false
                 ctx.rl.prompt()
                 return { code: returncode.ERROR_INVALID_ARGUMENT }
             }
@@ -45,6 +47,7 @@ module.exports = {
                 confirm = confirm.replace("\r", "").replace("\n", "").trim()
                 if (confirm != password) {
                     console.log("password does not match")
+                    ctx.rl.stdoutMuted = false
                     ctx.rl.prompt()
                     delete password
                     delete newPass
@@ -55,7 +58,8 @@ module.exports = {
                     let users = JSON.parse(read("/etc/users.json"))
                     users[user]["pwhashed"] = sha256(confirm)
                     write("/etc/users.json", JSON.stringify(users, null, 2))
-                    console.log("password changed for " + user)
+                    console.log("\npassword changed for " + user)
+                    ctx.rl.stdoutMuted = false
                     ctx.rl.prompt()
                     delete password
                     delete newPass
@@ -64,6 +68,8 @@ module.exports = {
                     }
                 }
             })
+            ctx.rl.stdoutMuted = true
         })
+        ctx.rl.stdoutMuted = true
     }
 }
